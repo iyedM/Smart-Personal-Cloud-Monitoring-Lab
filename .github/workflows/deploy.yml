@@ -1,56 +1,32 @@
-name: Build and Deploy Monitor
+name: Build Monitor Only
 
 on:
   push:
     branches: [main]
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      # 1️⃣ Checkout le code
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      # 2️⃣ Installer Docker
-      - name: Set up Docker Buildx
+      - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      # 3️⃣ Build Docker image
       - name: Build Docker image
         run: docker build -t monitor ./docker
 
-      # 4️⃣ Run Docker container
-      - name: Run Docker container
-        run: docker run --rm monitor
+      # Exécuter le container en mode non interactif et sortir immédiatement
+      - name: Test Docker image
+        run: docker run --rm monitor echo "Container ran successfully"
 
-      # 5️⃣ Installer Terraform
-      - name: Set up Terraform
+      - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.13.3
 
-      # 6️⃣ Terraform init
-      - name: Terraform Init
+      - name: Terraform Init & Plan
         run: |
           cd terraform
           terraform init
-
-      # 7️⃣ Terraform plan
-      - name: Terraform Plan
-        run: |
-          cd terraform
           terraform plan
-
-      # 8️⃣ Terraform apply
-      - name: Terraform Apply
-        run: |
-          cd terraform
-          terraform apply -auto-approve
-
-      # 9️⃣ Show Terraform output
-      - name: Show Terraform Output
-        run: |
-          cd terraform
-          terraform output
