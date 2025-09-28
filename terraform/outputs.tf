@@ -1,3 +1,3 @@
-output "instance_ip" {
-  value = aws_instance.monitor_vm.public_ip
+output "monitor_message" {
+  value = "Terraform run successful!"
 }
