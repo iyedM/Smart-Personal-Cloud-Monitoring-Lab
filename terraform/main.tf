@@ -1,11 +1,12 @@
 provider "aws" {
-  region = "us-east-1"
+  access_key = "test"
+  secret_key = "test"
+  region     = "us-east-1"
+  endpoints {
+    s3 = "http://localhost:4566"
+  }
 }
 
-resource "aws_instance" "monitor_vm" {
-  ami           = "ami-0c55b159cbfafe1f0"  # Ubuntu 22.04
-  instance_type = "t2.micro"
-  tags = {
-    Name = "MonitorVM"
-  }
+resource "aws_s3_bucket" "test_bucket" {
+  bucket = "monitor-bucket"
 }
